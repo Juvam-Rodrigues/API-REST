@@ -1,3 +1,3 @@
 spring:
-  application:
-    name: apirest
+  mongodb:
+    uri: mongodb+srv://admin:admin@clusterapirest.zqhqtdu.mongodb.net/apimongo?retryWrites=true&w=majority
