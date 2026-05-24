@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+
+
 import java.util.Map;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,8 @@ public class DocumentoService {
 	
 	
     public Object criarDocumento(String collection, Map<String, Object> documento) {
+    	
+    	
         return mongoTemplate.save(documento, collection);
     }
 
@@ -31,17 +36,23 @@ public class DocumentoService {
     }
     
     public Object listarDocumentoPorId(String collection, String id) {
-        return mongoTemplate.findById(id, Object.class, collection);
+    	return mongoTemplate.findById(id, Object.class, collection);
+
     }
     
     public Object removerDocumento(String collection, String id) {
     	Query query = Query.query(Criteria.where("_id").is(id));
-
+    	
     	return mongoTemplate.remove(query, collection);
+
     }
     
     public Object atualizarDocumento(String collection, String id, Map<String, Object> documento) {
 
+    	if (documento == null || documento.isEmpty()) {
+	        throw new BadRequestException("Body está vazio");
+	    }
+    	
         Query query = new Query(Criteria.where("_id").is(id));
 
         Update update = new Update();
@@ -49,6 +60,7 @@ public class DocumentoService {
         documento.forEach(update::set);
 
         mongoTemplate.updateFirst(query, update, collection);
+
 
         return listarDocumentoPorId(collection, id);
     }
