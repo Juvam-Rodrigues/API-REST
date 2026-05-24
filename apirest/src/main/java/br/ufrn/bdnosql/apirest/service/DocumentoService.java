@@ -21,8 +21,6 @@ public class DocumentoService {
 	private final MongoTemplate mongoTemplate;
 	
     public Object criarDocumento(String collection, Map<String, Object> documento) {
-    	
-    	
         return mongoTemplate.save(documento, collection);
     }
 
