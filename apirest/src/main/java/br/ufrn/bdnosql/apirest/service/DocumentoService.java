@@ -27,9 +27,6 @@ public class DocumentoService {
 	
     public Object criarDocumento(String collection, Map<String, Object> documento) {
     	
-    	if (!collection.matches("^[a-zA-Z0-9_]+$")) {
-    	    throw new BadRequestException("Nome de collection contém caracteres inválidos");
-    	}
     	
         return mongoTemplate.save(documento, collection);
     }
@@ -53,7 +50,7 @@ public class DocumentoService {
     public Object atualizarDocumento(String collection, String id, Map<String, Object> documento) {
 
     	if (documento == null || documento.isEmpty()) {
-	        throw new BadRequestException("Body não pode estar vazio");
+	        throw new BadRequestException("Body está vazio");
 	    }
     	
         Query query = new Query(Criteria.where("_id").is(id));
