@@ -7,8 +7,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
+import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+import br.ufrn.bdnosql.apirest.exception.custom.NotFoundException;
 
 import java.util.Map;
 import java.util.List;
@@ -36,14 +39,28 @@ public class DocumentoService {
     }
     
     public Object listarDocumentoPorId(String collection, String id) {
-    	return mongoTemplate.findById(id, Object.class, collection);
+    	Object resultado = mongoTemplate.findById(id, Object.class, collection);
+    	
+    	if(resultado == null) {
+    		throw new NotFoundException(
+    	            "Documento não encontrado na collection " + collection);
+    	}
+    	
+    	return resultado;
 
     }
     
-    public Object removerDocumento(String collection, String id) {
+    public DeleteResult removerDocumento(String collection, String id) {
     	Query query = Query.query(Criteria.where("_id").is(id));
     	
-    	return mongoTemplate.remove(query, collection);
+    	DeleteResult resultado = mongoTemplate.remove(query, collection);
+    	
+    	if (resultado.getDeletedCount() == 0) {
+            throw new NotFoundException(
+                "Documento não encontrado na collection " + collection);
+    	}
+    	
+    	return resultado;
 
     }
     
@@ -59,8 +76,13 @@ public class DocumentoService {
 
         documento.forEach(update::set);
 
-        mongoTemplate.updateFirst(query, update, collection);
-
+        UpdateResult resultado = mongoTemplate.updateFirst(query, update, collection);
+        
+        if (resultado.getMatchedCount() == 0) {
+            throw new NotFoundException(
+                "Documento não encontrado na collection " + collection
+            );
+        }
 
         return listarDocumentoPorId(collection, id);
     }

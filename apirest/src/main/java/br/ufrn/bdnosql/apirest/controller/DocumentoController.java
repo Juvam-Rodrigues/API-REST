@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mongodb.client.result.DeleteResult;
+
 import br.ufrn.bdnosql.apirest.service.DocumentoService;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -44,8 +46,8 @@ public class DocumentoController {
 	}
 
 	@DeleteMapping("/{collection}/{id}")
-	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
-		Object resposta = service.removerDocumento(collection, id);
+	public ResponseEntity<DeleteResult> remover(@PathVariable String collection, @PathVariable String id) {
+		DeleteResult resposta = service.removerDocumento(collection, id);
 		return ResponseEntity.ok().body(resposta);
 	}
 
