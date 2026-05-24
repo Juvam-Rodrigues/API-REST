@@ -3,6 +3,8 @@ package br.ufrn.bdnosql.apirest.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,31 +25,37 @@ public class DocumentoController {
 	}
 
 	@PostMapping("/{collection}")
-	public Object criar(@PathVariable String collection, @RequestBody Map<String, Object> documento) {
-		return service.criarDocumento(collection, documento);
+	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody Map<String, Object> documento) {
+		Object resposta = service.criarDocumento(collection, documento);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
 	}
 
 	@GetMapping("/{collection}")
-	public List<Object> listarTodos(@PathVariable String collection) {
-		return service.listarDocumentos(collection);
+	public ResponseEntity<List<Object>> listarTodos(@PathVariable String collection) {
+		List<Object> resposta = service.listarDocumentos(collection);
+		return ResponseEntity.ok().body(resposta);
 	}
 
 	@GetMapping("/{collection}/{id}")
 	public Object listarPorId(@PathVariable String collection, @PathVariable String id) {
-		return service.listarDocumentoPorId(collection, id);
+		Object resposta = service.listarDocumentoPorId(collection, id);
+		return ResponseEntity.ok().body(resposta);
 	}
 
 	@DeleteMapping("/{collection}/{id}")
-	public Object remover(@PathVariable String collection, @PathVariable String id) {
-		return service.removerDocumento(collection, id);
+	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
+		Object resposta = service.removerDocumento(collection, id);
+		return ResponseEntity.ok().body(resposta);
 	}
 
 	@PutMapping("/{collection}/{id}")
-	public Object atualizar(@PathVariable String collection, @PathVariable String id,
+	public ResponseEntity<Object> atualizar(@PathVariable String collection, @PathVariable String id,
 			@RequestBody Map<String, Object> documento) {
-
-		return service.atualizarDocumento(collection, id, documento);
-
+		
+		
+		Object resposta = service.atualizarDocumento(collection, id, documento);
+		return ResponseEntity.ok().body(resposta);
 	}
 
 }
