@@ -19,11 +19,6 @@ import lombok.AllArgsConstructor;
 public class DocumentoService {
 	
 	private final MongoTemplate mongoTemplate;
-
-    public DocumentoService(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
-	
 	
     public Object criarDocumento(String collection, Map<String, Object> documento) {
     	
