@@ -1,11 +1,13 @@
 package br.ufrn.bdnosql.apirest.service;
 
-
+//import org.springframework.data.mongodb.core.mapping.Document;
+import org.bson.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+
 
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
 
@@ -13,6 +15,7 @@ import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
 import java.util.Map;
 import java.util.List;
 import lombok.AllArgsConstructor;
+
 
 @Service
 @AllArgsConstructor
@@ -24,14 +27,68 @@ public class DocumentoService {
         return mongoTemplate.save(documento, collection);
     }
 
-    public List<Object> listarDocumentos(String collection) {
+    /*public List<Object> listarDocumentos(String collection) {
         return mongoTemplate.findAll(Object.class, collection);
     }
     
     public Object listarDocumentoPorId(String collection, String id) {
     	return mongoTemplate.findById(id, Object.class, collection);
 
+    }*/
+
+public List<Object> listarDocumentos(String collection, String filtro) {
+
+    Query query = new Query();
+
+    if(filtro != null && !filtro.isEmpty()) {
+
+        Document document = Document.parse(filtro);
+
+        document.forEach((campo, valor) -> {
+
+            if(valor instanceof Document operador) {
+
+                operador.forEach((op, val) -> {
+
+                    switch(op) {
+
+                        case "$gt":
+                            query.addCriteria(
+                                    Criteria.where(campo).gt(val)
+                            );
+                            break;
+
+                        case "$gte":
+                            query.addCriteria(
+                                    Criteria.where(campo).gte(val)
+                            );
+                            break;
+
+                        case "$lt":
+                            query.addCriteria(
+                                    Criteria.where(campo).lt(val)
+                            );
+                            break;
+
+                        case "$regex":
+                            query.addCriteria(
+                                    Criteria.where(campo)
+                                            .regex(val.toString())
+                            );
+                            break;
+                    }
+                });
+
+            } else {
+                query.addCriteria(
+                        Criteria.where(campo).is(valor)
+                );
+            }
+        });
     }
+
+    return mongoTemplate.find(query, Object.class, collection);
+}
     
     public Object removerDocumento(String collection, String id) {
     	Query query = Query.query(Criteria.where("_id").is(id));
@@ -55,7 +112,7 @@ public class DocumentoService {
         mongoTemplate.updateFirst(query, update, collection);
 
 
-        return listarDocumentoPorId(collection, id);
+        return listarDocumentos(collection, id);
     }
     
 }
