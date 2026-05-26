@@ -18,8 +18,8 @@ public class DocumentoController {
 	private final DocumentoService service;
 
 	@PostMapping("/{collection}")
-	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody Map<String, Object> documento) {
-		Object resposta = service.criarDocumento(collection, documento);
+	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
+		Object resposta = service.criarDocumentos(collection, documentos);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
 	}
@@ -33,9 +33,10 @@ public class DocumentoController {
 
 	@GetMapping("/{collection}")
 	public ResponseEntity<List<Object>> listarTodos(@PathVariable String collection,
-			@RequestParam(required = false) String query, @RequestParam(required = false) String fields) {
+			@RequestParam(required = false) String query, @RequestParam(required = false) String fields, 
+			@RequestParam(required = false) String page, @RequestParam(required = false) String limit) {
 
-		List<Object> resultado = service.listarDocumentos(collection, query, fields);
+		List<Object> resultado = service.listarDocumentos(collection, query, fields, page, limit);
 
 		return ResponseEntity.ok(resultado);
 	}
@@ -47,6 +48,14 @@ public class DocumentoController {
 	 * ResponseEntity.ok().body(resposta); }
 	 */
 
+	@DeleteMapping("/deletar-todos/{collection}")
+	public ResponseEntity<Object> removerTodosDocumentosSelecao(@PathVariable String collection) {
+		Object resposta = service.removerTodosDocumentosSelecao(collection);
+
+	    return ResponseEntity.ok(resposta);
+	}
+
+	
 	@DeleteMapping("/{collection}/{id}")
 	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
 		Object resposta = service.removerDocumento(collection, id);
