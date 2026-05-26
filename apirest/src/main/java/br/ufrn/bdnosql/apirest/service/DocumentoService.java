@@ -1,6 +1,5 @@
 package br.ufrn.bdnosql.apirest.service;
 
-//import org.springframework.data.mongodb.core.mapping.Document;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
