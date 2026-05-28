@@ -1,0 +1,7 @@
+br\ufrn\bdnosql\apirest\exception\ApiExceptionHandler.class
+br\ufrn\bdnosql\apirest\service\MetodosListar.class
+br\ufrn\bdnosql\apirest\ApirestApplication.class
+br\ufrn\bdnosql\apirest\exception\custom\BadRequestException.class
+br\ufrn\bdnosql\apirest\exception\ErrorMessage.class
+br\ufrn\bdnosql\apirest\controller\DocumentoController.class
+br\ufrn\bdnosql\apirest\service\DocumentoService.class
