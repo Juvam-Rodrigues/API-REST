@@ -1,24 +1,14 @@
-version: "3.8"
-
 services:
-
   mongo:
     image: mongo:latest
-    container_name: mongodb_container
     ports:
       - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
 
-  apirest:
+  api:
     build: .
-    container_name: apirest
     ports:
       - "8080:8080"
     depends_on:
       - mongo
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/seu_db
-
-volumes:
-  mongo_data:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/apirest
