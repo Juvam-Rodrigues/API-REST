@@ -1,0 +1,30 @@
+services:
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: apirest
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build: .
+    container_name: api_container
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongo:27017/apirest?authSource=admin
+    ports:
+      - "8080:8080"
+
+
+
+volumes:
+  mongo_data:
