@@ -7,7 +7,7 @@ import org.bson.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-public class MetodosSelecao {
+public class MetodosListar {
 	public static void adicionarProjecao(String atributosVisiveis, Query query) {
 
 		// Verificação de fields = atributos visíveis = projeção

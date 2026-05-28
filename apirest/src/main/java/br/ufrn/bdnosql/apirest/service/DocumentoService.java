@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.bson.Document;
 import org.springframework.stereotype.Service;
 
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
@@ -23,22 +24,32 @@ public class DocumentoService {
 	public List<Object> criarDocumentos(String collection, List<Map<String, Object>> documentos) {
 		List<Object> documentosAdicionados = new ArrayList<>();
 		for (Map<String, Object> documento : documentos) {
-			documentosAdicionados.add(mongoTemplate.save(documento, collection));
+			documentosAdicionados.add(mongoTemplate.save(documento, collection));	
 		}
 		return documentosAdicionados;
 	}
 
-	public List<Object> listarDocumentos(String collection, String filtro, String atributosVisiveis, String paginaAtual,
+	public List<Document> listarDocumentos(String collection, String filtro, String atributosVisiveis, String paginaAtual,
 			String limite) {
 
 		Query query = new Query();
 
-		MetodosSelecao.adicionarFiltro(filtro, query);
-		MetodosSelecao.adicionarProjecao(atributosVisiveis, query);
-		MetodosSelecao.adicionarLimite(limite, query);
-		MetodosSelecao.adicionarPagina(paginaAtual, query);
+		MetodosListar.adicionarFiltro(filtro, query);
+		MetodosListar.adicionarProjecao(atributosVisiveis, query);
+		MetodosListar.adicionarLimite(limite, query);
+		MetodosListar.adicionarPagina(paginaAtual, query);
 
-		return mongoTemplate.find(query, Object.class, collection);
+		 List<Document> documentosListados = mongoTemplate.find(query, Document.class, collection);
+		 for (Document documentoAtual : documentosListados) {
+
+		        ObjectId id = documentoAtual.getObjectId("_id");
+
+		        if (id != null) {
+		        	documentoAtual.put("_id", id.toHexString());
+		        }
+		    }
+
+		    return documentosListados;
 
 	}
 
