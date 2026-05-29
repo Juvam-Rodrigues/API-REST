@@ -25,7 +25,7 @@ public class DocumentoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
 	}
 	
-	@GetMapping(value = "/", produces = "html")
+	@GetMapping(value = "/", produces = "text/html")
 	public ResponseEntity<String> paginaHtml() {
 
 	    String html = """
