@@ -59,7 +59,6 @@ public class DocumentoService {
 		ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
 
 		Query query = Query.query(Criteria.where("_id").is(objectId));
-
 		return mongoTemplate.remove(query, collection);
 
 	}

@@ -68,7 +68,7 @@ public class DocumentoController {
 	@DeleteMapping("/{collection}/{id}")
 	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
 		Object resposta = service.removerDocumento(collection, id);
-		return ResponseEntity.ok().body(resposta);
+		return ResponseEntity.ok().body("Status OK: \n" + resposta);
 	}
 
 	@PutMapping("/{collection}/{id}")
@@ -76,7 +76,7 @@ public class DocumentoController {
 			@RequestBody Map<String, Object> documento) {
 
 		Object resposta = service.atualizarDocumento(collection, id, documento);
-		return ResponseEntity.ok().body(resposta);
+		return ResponseEntity.ok().body("Status OK: \n" + resposta);
 	}
 
 }
