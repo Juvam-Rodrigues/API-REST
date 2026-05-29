@@ -33,7 +33,7 @@ public class DocumentoController {
 	            <body>
 	                <h1>API funcionando</h1>
 	                <h2 style=color:green>Status OK</h2>
-	                <p>Para usar basta colocar localhost:8080/<Nome da coleção>/<filtros, limites etc></p>
+					<p>Coloque: localhost:8080/&lt;nome-da-colecao&gt;/&lt;filtros&gt;</p>
 	            </body>
 	        </html>
 	        """;
