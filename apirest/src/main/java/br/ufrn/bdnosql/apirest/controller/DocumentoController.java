@@ -24,6 +24,24 @@ public class DocumentoController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
 	}
+	
+	@GetMapping(value = "/", produces = "html")
+	public ResponseEntity<String> paginaHtml() {
+
+	    String html = """
+	        <html>
+	            <body>
+	                <h1>API funcionando</h1>
+	                <h2 style=color:green>Status OK</h2>
+	                <p>Para usar basta colocar localhost:8080/<Nome da coleção>/<filtros, limites etc></p>
+	            </body>
+	        </html>
+	        """;
+
+	    return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(html);
+	}
 
 	@GetMapping("/{collection}")
 	public ResponseEntity<List<Document>> listar(@PathVariable String collection,
