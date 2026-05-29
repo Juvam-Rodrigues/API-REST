@@ -20,7 +20,7 @@ services:
     depends_on:
       - mongo
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongo:27017/apirest?authSource=admin
+      SPRING_MONGODB_URI: mongodb://admin:admin@mongo:27017/apirest?authSource=admin
     ports:
       - "8080:8080"
 
