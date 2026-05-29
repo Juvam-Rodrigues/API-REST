@@ -14,11 +14,20 @@ services:
     volumes:
       - mongo_data:/data/db
 
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
   api:
     build: .
     container_name: api_container
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+        
     environment:
       SPRING_MONGODB_URI: mongodb://admin:admin@mongo:27017/apirest?authSource=admin
     ports:
