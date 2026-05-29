@@ -48,9 +48,9 @@ public class DocumentoController {
             @RequestParam Map<String, String> filter, @RequestParam(required = false) String fields,
 			@RequestParam(required = false) String page, @RequestParam(required = false) String limit) {
 
-        filter.remove((fields));
-        filter.remove((page));
-        filter.remove((limit));
+        filter.remove("fields");
+        filter.remove("page");
+        filter.remove("limit");
 
 		List<Document> resultado = service.listarDocumentos(collection, filter, fields, page, limit);
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -57,7 +58,7 @@ public class MetodosListar {
 
         filtros.forEach((campo, valor) -> {
 
-            // maior que
+            // maior igual que
             if(campo.endsWith("_gte")) {
                 String nomeCampo = campo.replace("_gte", ""); // remove o operador do campo
 
@@ -66,7 +67,7 @@ public class MetodosListar {
                 );
             }
 
-            // maior ou igual
+            // maior que
             else if(campo.endsWith("_gt")) {
                 String nomeCampo = campo.replace("_gt", ""); // remove o operador do campo
 
@@ -75,7 +76,7 @@ public class MetodosListar {
                 );
             }
 
-            // menor que
+            // menor igual que
             else if (campo.endsWith("_lte")) {
                 String nomeCampo = campo.replace("_lte", ""); // remove o operador do campo
 
@@ -84,7 +85,7 @@ public class MetodosListar {
                 );
             }
 
-            // menor ou igual
+            // menor que
             else if(campo.endsWith("_lt")) {
                 String nomeCampo = campo.replace("_lt", ""); // remove o operador do campo
 
