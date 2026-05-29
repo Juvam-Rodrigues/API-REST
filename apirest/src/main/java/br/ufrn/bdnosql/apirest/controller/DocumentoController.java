@@ -45,10 +45,14 @@ public class DocumentoController {
 
 	@GetMapping("/{collection}")
 	public ResponseEntity<List<Document>> listar(@PathVariable String collection,
-			@RequestParam(required = false) String query, @RequestParam(required = false) String fields, 
+            @RequestParam Map<String, String> filter, @RequestParam(required = false) String fields,
 			@RequestParam(required = false) String page, @RequestParam(required = false) String limit) {
 
-		List<Document> resultado = service.listarDocumentos(collection, query, fields, page, limit);
+        filter.remove((fields));
+        filter.remove((page));
+        filter.remove((limit));
+
+		List<Document> resultado = service.listarDocumentos(collection, filter, fields, page, limit);
 
 		return ResponseEntity.ok(resultado);
 	}

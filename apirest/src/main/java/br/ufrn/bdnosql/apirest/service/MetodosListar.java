@@ -2,6 +2,7 @@ package br.ufrn.bdnosql.apirest.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -52,44 +53,88 @@ public class MetodosListar {
 		}
 	}
 
-	public static void adicionarFiltro(String filtro, Query query) {
+	public static void adicionarFiltro(Map<String, String> filtros, Query query) {
 
-		// Verificação de filtro
-		if (filtro != null && !filtro.isEmpty()) {
+        filtros.forEach((campo, valor) -> {
 
-			Document document = Document.parse(filtro);
+            // maior que
+            if(campo.endsWith("_gte")) {
+                String nomeCampo = campo.replace("_gte", ""); // remove o operador do campo
 
-			document.forEach((campo, valor) -> {
+                query.addCriteria(
+                        Criteria.where(nomeCampo).gte(converterValor(valor))
+                );
+            }
 
-				if (valor instanceof Document operador) {
+            // maior ou igual
+            else if(campo.endsWith("_gt")) {
+                String nomeCampo = campo.replace("_gt", ""); // remove o operador do campo
 
-					operador.forEach((op, val) -> {
+                query.addCriteria(
+                        Criteria.where(nomeCampo).gt(converterValor(valor))
+                );
+            }
 
-						switch (op) {
+            // menor que
+            else if (campo.endsWith("_lte")) {
+                String nomeCampo = campo.replace("_lte", ""); // remove o operador do campo
 
-						case "$gt":
-							query.addCriteria(Criteria.where(campo).gt(val));
-							break;
+                query.addCriteria(
+                        Criteria.where(nomeCampo).lte(converterValor(valor))
+                );
+            }
 
-						case "$gte":
-							query.addCriteria(Criteria.where(campo).gte(val));
-							break;
+            // menor ou igual
+            else if(campo.endsWith("_lt")) {
+                String nomeCampo = campo.replace("_lt", ""); // remove o operador do campo
 
-						case "$lt":
-							query.addCriteria(Criteria.where(campo).lt(val));
-							break;
+                query.addCriteria(
+                        Criteria.where(nomeCampo).lt(converterValor(valor))
+                );
+            }
 
-						case "$regex":
-							query.addCriteria(Criteria.where(campo).regex(val.toString()));
-							break;
-						}
-					});
+            // contém
+            else if(campo.endsWith("_like")) {
 
-				} else {
-					query.addCriteria(Criteria.where(campo).is(valor));
-				}
-			});
-		}
-	}
+                String nomeCampo = campo.replace("_like", "");
 
+                query.addCriteria(
+                        Criteria.where(nomeCampo)
+                                .regex(valor, "i")
+                );
+            }
+
+            // igual
+            else {
+
+                query.addCriteria(
+                        Criteria.where(campo)
+                                .is(converterValor(valor))
+                );
+            }
+
+        });
+    }
+
+    private static Object converterValor(String valor) {
+
+        try {
+            return Integer.parseInt(valor);
+        } catch(Exception e) {}
+
+        try {
+            return Double.parseDouble(valor);
+        } catch(Exception e) {}
+
+        if(valor.equalsIgnoreCase("true")) {
+            return true;
+        }
+
+        if(valor.equalsIgnoreCase("false")) {
+            return false;
+        }
+
+        return valor;
+    }
 }
+

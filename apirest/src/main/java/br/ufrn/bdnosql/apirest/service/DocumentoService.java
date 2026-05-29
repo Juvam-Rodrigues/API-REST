@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class DocumentoService {
 		return documentosAdicionados;
 	}
 
-	public List<Document> listarDocumentos(String collection, String filtro, String atributosVisiveis, String paginaAtual,
-			String limite) {
+	public List<Document> listarDocumentos(String collection, Map<String, String> filtro, String atributosVisiveis,
+            String paginaAtual, String limite) {
 
 		Query query = new Query();
 
@@ -84,6 +85,8 @@ public class DocumentoService {
 
 		mongoTemplate.updateFirst(query, update, collection);
 
-		return listarDocumentos(collection, id, "", "", "");
+        Map<String, String> filtro = new HashMap<>();
+        filtro.put("_id", id);
+        return listarDocumentos(collection, filtro, "", "", "");
 	}
 }
