@@ -20,9 +20,9 @@ public class DocumentoController {
 
 	@PostMapping("/{collection}")
 	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
-		Object resposta = service.criarDocumentos(collection, documentos);
+		List<Object> resposta = service.criarDocumentos(collection, documentos);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
+		return ResponseEntity.status(HttpStatus.CREATED).body("STATUS OK\nForam criados: " + resposta.size() + " documentos. :)");
 	}
 	
 	@GetMapping(value = "/", produces = "text/html")
