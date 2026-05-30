@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+import br.ufrn.bdnosql.apirest.exception.custom.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -24,6 +25,19 @@ public class ApiExceptionHandler {
 
 	    return ResponseEntity
 	            .status(HttpStatus.BAD_REQUEST)
+	            .body(error);
+	}
+	
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ErrorMessage> handleNotFound(NotFoundException ex,  HttpServletRequest request){
+		ErrorMessage error =  new ErrorMessage(
+	            request,
+	            HttpStatus.NOT_FOUND,
+	            ex.getMessage()
+	    );
+
+	    return ResponseEntity
+	            .status(HttpStatus.NOT_FOUND)
 	            .body(error);
 	}
 	
