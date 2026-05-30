@@ -63,7 +63,7 @@ public class DocumentoService {
 
 	}
 	
-	public Object removerTodosDocumentosSelecao(String collection) {
+	public Object removerTodosDocumentosColecao(String collection) {
 		  Query query = new Query();
 		  return mongoTemplate.remove(query, collection);
 	}

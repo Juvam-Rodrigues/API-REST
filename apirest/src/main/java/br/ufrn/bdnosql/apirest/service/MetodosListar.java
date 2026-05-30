@@ -37,10 +37,10 @@ public class MetodosListar {
 					query.limit(limiteAtual);
 
 				} else {
-					throw new BadRequestException("STATUS ERROR:\nO número do limite é inválido.");
+					throw new BadRequestException("O número do limite deve estar entre 1 e 1000.");
 				}
 			} catch (NumberFormatException ex) {
-				throw new BadRequestException("STATUS ERROR:\nO número do limite é inválido.");
+				throw new BadRequestException("O número do limite é inválido.");
 			}
 		}else{
 			query.limit(100); //Limite padrão
@@ -58,10 +58,10 @@ public class MetodosListar {
 				if (paginas >= 0) {
 					query.skip(paginas);
 				} else {
-					throw new BadRequestException("STATUS ERROR:\nO número da página é inválido, pois é menor do que zero.");
+					throw new BadRequestException("O número da página deve ser maior que 0.");
 				}
 			} catch (NumberFormatException ex) {
-				throw new BadRequestException("STATUS ERROR:\nO número da página é inválido.");
+				throw new BadRequestException("O número da página é inválido.");
 			}
 
 		}

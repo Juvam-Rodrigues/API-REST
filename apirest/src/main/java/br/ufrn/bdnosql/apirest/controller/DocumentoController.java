@@ -2,6 +2,8 @@ package br.ufrn.bdnosql.apirest.controller;
 
 import java.util.List;
 import java.util.Map;
+
+import br.ufrn.bdnosql.apirest.message.CustomMessage;
 import org.bson.Document;
 
 import org.springframework.http.HttpStatus;
@@ -22,25 +24,27 @@ public class DocumentoController {
 	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
 		List<Object> resposta = service.criarDocumentos(collection, documentos);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body("STATUS OK:\nForam criados: " + resposta.size() + " documentos. :)");
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        resposta.size() + " documento(s) criado(s) na coleção " + collection + ".",
+                        resposta
+                )
+        );
 	}
 	
-	@GetMapping(value = "/", produces = "text/html")
-	public ResponseEntity<String> paginaHtml() {
+	@GetMapping("/")
+	public ResponseEntity<Object> inicioApi() {
 
-	    String html = """
-	        <html>
-	            <body>
-	                <h1>API funcionando</h1>
-	                <h2 style=color:green>Status OK</h2>
-					<p>Coloque: localhost:8080/&lt;nome-da-colecao&gt;/&lt;filtros&gt;</p>
-	            </body>
-	        </html>
-	        """;
-
-	    return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(html);
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "API Rest Java + Sping Boot com MongoDB\n" +
+                                "Crie uma coleção via POST com ou sem documentos: localhost:8080/<nome_da_colecao>\n" +
+                                "Consulte uma coleção via GET: localhost:8080/<nome_da_colecao>?<filtro>&fields=<>&page=<>&limit<>",
+                        ""
+                )
+        );
 	}
 
 	@GetMapping("/{collection}")
@@ -60,20 +64,38 @@ public class DocumentoController {
 	@GetMapping("/contar-documentos/{collection}")
 	public ResponseEntity<Object> contar(@PathVariable String collection) {
        	long resposta = service.contarDocumentos(collection);
-		return ResponseEntity.ok().body("STATUS OK:\nQuantidade de documentos em "+ collection +": "+ resposta);
+		return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "Contagem realizada com sucesso",
+                        resposta
+                )
+        );
 	}
 
 	@DeleteMapping("/deletar-todos/{collection}")
-	public ResponseEntity<Object> removerTodosDocumentosSelecao(@PathVariable String collection) {
-		Object resposta = service.removerTodosDocumentosSelecao(collection);
+	public ResponseEntity<Object> removerTodosDocumentosColecao(@PathVariable String collection) {
+		Object resposta = service.removerTodosDocumentosColecao(collection);
 
-	    return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "Documentos da coleção " + collection + " deletados com sucesso!",
+                        resposta
+                )
+        );
 	}
 
 	@DeleteMapping("/{collection}/{id}")
 	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
 		Object resposta = service.removerDocumento(collection, id);
-		return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "Documento " + id + " da coleção " + collection + " deletado com sucesso!",
+                        resposta
+                )
+        );
 	}
 
 	@PutMapping("/{collection}/{id}")
@@ -81,7 +103,13 @@ public class DocumentoController {
 			@RequestBody Map<String, Object> documento) {
 
 		Object resposta = service.atualizarDocumento(collection, id, documento);
-		return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "Documento " + id + " da coleção " + collection + " atualizado com sucesso!",
+                        resposta
+                )
+        );
 	}
 
 }
