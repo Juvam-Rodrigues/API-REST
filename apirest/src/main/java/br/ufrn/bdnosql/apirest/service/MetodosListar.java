@@ -29,13 +29,15 @@ public class MetodosListar {
 		if (limite != null && !limite.isEmpty()) {
 			int limiteAtual = Integer.parseInt(limite); // Pode lançar exceção
 
-			if (limiteAtual > 0) {
+			if (limiteAtual > 0 && limiteAtual <= 1000) { //Limite máximo
 				query.limit(limiteAtual);
 
 			} else {
 				// Lançar exceção
 			}
-		}
+		}else{
+            query.limit(100); //Limite padrão
+        }
 	}
 
 	public static void adicionarPagina(String paginaAtual, Query query) {
