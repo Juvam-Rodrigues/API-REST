@@ -39,8 +39,8 @@ public class DocumentoController {
         return ResponseEntity.ok(
                 new CustomMessage(
                         HttpStatus.OK.value(),
-                        "API Rest Java + Sping Boot com MongoDB\n" +
-                                "Crie uma coleção via POST com ou sem documentos: localhost:8080/<nome_da_colecao>\n" +
+                        "API Rest Java + Sping Boot com MongoDB. " +
+                                "Crie uma coleção via POST com ou sem documentos: localhost:8080/<nome_da_colecao>. " +
                                 "Consulte uma coleção via GET: localhost:8080/<nome_da_colecao>?<filtro>&fields=<>&page=<>&limit<>",
                         ""
                 )
