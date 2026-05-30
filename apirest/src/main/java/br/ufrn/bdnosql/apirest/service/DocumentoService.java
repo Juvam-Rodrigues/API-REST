@@ -8,9 +8,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
 
 import java.util.HashMap;
