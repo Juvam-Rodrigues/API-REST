@@ -1,7 +1,0 @@
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/ApirestApplication.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/controller/DocumentoController.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/exception/ApiExceptionHandler.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/exception/ErrorMessage.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/exception/custom/BadRequestException.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/service/DocumentoService.java
-/mnt/c/projetos_java/apirest/trabalho-ii-unidade-bianca-juvam-lucas/apirest/src/main/java/br/ufrn/bdnosql/apirest/service/MetodosListar.java
