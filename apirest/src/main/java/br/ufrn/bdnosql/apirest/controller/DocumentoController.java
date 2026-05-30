@@ -22,7 +22,7 @@ public class DocumentoController {
 	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
 		List<Object> resposta = service.criarDocumentos(collection, documentos);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body("STATUS OK\nForam criados: " + resposta.size() + " documentos. :)");
+		return ResponseEntity.status(HttpStatus.CREATED).body("STATUS OK:\nForam criados: " + resposta.size() + " documentos. :)");
 	}
 	
 	@GetMapping(value = "/", produces = "text/html")
@@ -57,18 +57,23 @@ public class DocumentoController {
 		return ResponseEntity.ok(resultado);
 	}
 
+	@GetMapping("/contar-documentos/{collection}")
+	public ResponseEntity<Object> contar(@PathVariable String collection) {
+       	long resposta = service.contarDocumentos(collection);
+		return ResponseEntity.ok().body("STATUS OK:\nQuantidade de documentos em "+ collection +": "+ resposta);
+	}
+
 	@DeleteMapping("/deletar-todos/{collection}")
 	public ResponseEntity<Object> removerTodosDocumentosSelecao(@PathVariable String collection) {
 		Object resposta = service.removerTodosDocumentosSelecao(collection);
 
-	    return ResponseEntity.ok(resposta);
+	    return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
 	}
 
-	
 	@DeleteMapping("/{collection}/{id}")
 	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
 		Object resposta = service.removerDocumento(collection, id);
-		return ResponseEntity.ok().body("Status OK: \n" + resposta);
+		return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
 	}
 
 	@PutMapping("/{collection}/{id}")
@@ -76,7 +81,7 @@ public class DocumentoController {
 			@RequestBody Map<String, Object> documento) {
 
 		Object resposta = service.atualizarDocumento(collection, id, documento);
-		return ResponseEntity.ok().body("Status OK: \n" + resposta);
+		return ResponseEntity.ok().body("STATUS OK:\n" + resposta);
 	}
 
 }

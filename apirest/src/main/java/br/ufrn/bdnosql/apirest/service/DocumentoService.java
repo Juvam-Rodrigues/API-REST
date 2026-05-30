@@ -88,4 +88,8 @@ public class DocumentoService {
         filtro.put("_id", id);
         return listarDocumentos(collection, filtro, "", "", "");
 	}
+
+	public long contarDocumentos(String collection){
+		return(mongoTemplate.count(new Query(), collection));
+	}
 }
