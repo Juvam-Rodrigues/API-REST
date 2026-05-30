@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+
 public class MetodosListar {
 	public static void adicionarProjecao(String atributosVisiveis, Query query) {
 
@@ -27,115 +29,113 @@ public class MetodosListar {
 
 		// Verificação de qual limite caso modificado
 		if (limite != null && !limite.isEmpty()) {
-			int limiteAtual = Integer.parseInt(limite); // Pode lançar exceção
 
-			if (limiteAtual > 0 && limiteAtual <= 1000) { //Limite máximo
-				query.limit(limiteAtual);
+			try {
+				int limiteAtual = Integer.parseInt(limite); 
 
-			} else {
-				// Lançar exceção
+				if (limiteAtual > 0 && limiteAtual <=1000) { //Limite máximo e mínimo;
+					query.limit(limiteAtual);
+
+				} else {
+					throw new BadRequestException("STATUS ERROR:\nO número do limite é inválido.");
+				}
+			} catch (NumberFormatException ex) {
+				throw new BadRequestException("STATUS ERROR:\nO número do limite é inválido.");
 			}
 		}else{
-            query.limit(100); //Limite padrão
-        }
+			query.limit(100); //Limite padrão
+		}
 	}
 
 	public static void adicionarPagina(String paginaAtual, Query query) {
 
 		// Verificação de qual limite caso modificado
 		if (paginaAtual != null && !paginaAtual.isEmpty()) {
-			int paginas = Integer.parseInt(paginaAtual); // Pode lançar exceção
-			paginas--; // Menos um porque as paginas começam no zero
-			if (paginas >= 0) {
-				query.skip(paginas);
-			} else {
-				// Lançar exceção
+			try {
+				int paginas = Integer.parseInt(paginaAtual);
+				paginas--; // Menos um porque as paginas começam no zero
+				
+				if (paginas >= 0) {
+					query.skip(paginas);
+				} else {
+					throw new BadRequestException("STATUS ERROR:\nO número da página é inválido, pois é menor do que zero.");
+				}
+			} catch (NumberFormatException ex) {
+				throw new BadRequestException("STATUS ERROR:\nO número da página é inválido.");
 			}
+
 		}
 	}
 
 	public static void adicionarFiltro(Map<String, String> filtros, Query query) {
 
-        filtros.forEach((campo, valor) -> {
+		filtros.forEach((campo, valor) -> {
 
-            // maior igual que
-            if(campo.endsWith("_gte")) {
-                String nomeCampo = campo.replace("_gte", ""); // remove o operador do campo
+			// maior igual que
+			if (campo.endsWith("_gte")) {
+				String nomeCampo = campo.replace("_gte", ""); // remove o operador do campo
 
-                query.addCriteria(
-                        Criteria.where(nomeCampo).gte(converterValor(valor))
-                );
-            }
+				query.addCriteria(Criteria.where(nomeCampo).gte(converterValor(valor)));
+			}
 
-            // maior que
-            else if(campo.endsWith("_gt")) {
-                String nomeCampo = campo.replace("_gt", ""); // remove o operador do campo
+			// maior que
+			else if (campo.endsWith("_gt")) {
+				String nomeCampo = campo.replace("_gt", ""); // remove o operador do campo
 
-                query.addCriteria(
-                        Criteria.where(nomeCampo).gt(converterValor(valor))
-                );
-            }
+				query.addCriteria(Criteria.where(nomeCampo).gt(converterValor(valor)));
+			}
 
-            // menor igual que
-            else if (campo.endsWith("_lte")) {
-                String nomeCampo = campo.replace("_lte", ""); // remove o operador do campo
+			// menor igual que
+			else if (campo.endsWith("_lte")) {
+				String nomeCampo = campo.replace("_lte", ""); // remove o operador do campo
 
-                query.addCriteria(
-                        Criteria.where(nomeCampo).lte(converterValor(valor))
-                );
-            }
+				query.addCriteria(Criteria.where(nomeCampo).lte(converterValor(valor)));
+			}
 
-            // menor que
-            else if(campo.endsWith("_lt")) {
-                String nomeCampo = campo.replace("_lt", ""); // remove o operador do campo
+			// menor que
+			else if (campo.endsWith("_lt")) {
+				String nomeCampo = campo.replace("_lt", ""); // remove o operador do campo
 
-                query.addCriteria(
-                        Criteria.where(nomeCampo).lt(converterValor(valor))
-                );
-            }
+				query.addCriteria(Criteria.where(nomeCampo).lt(converterValor(valor)));
+			}
 
-            // contém
-            else if(campo.endsWith("_like")) {
+			// contém
+			else if (campo.endsWith("_like")) {
 
-                String nomeCampo = campo.replace("_like", "");
+				String nomeCampo = campo.replace("_like", "");
 
-                query.addCriteria(
-                        Criteria.where(nomeCampo)
-                                .regex(valor, "i")
-                );
-            }
+				query.addCriteria(Criteria.where(nomeCampo).regex(valor, "i"));
+			}
 
-            // igual
-            else {
+			// igual
+			else {
 
-                query.addCriteria(
-                        Criteria.where(campo)
-                                .is(converterValor(valor))
-                );
-            }
+				query.addCriteria(Criteria.where(campo).is(converterValor(valor)));
+			}
 
-        });
-    }
+		});
+	}
 
-    private static Object converterValor(String valor) {
+	private static Object converterValor(String valor) {
 
-        try {
-            return Integer.parseInt(valor);
-        } catch(Exception e) {}
+		try {
+			return Integer.parseInt(valor);
+		} catch (NumberFormatException e) {
+		}
 
-        try {
-            return Double.parseDouble(valor);
-        } catch(Exception e) {}
+		try {
+			return Double.parseDouble(valor);
+		} catch (NumberFormatException e) {
+		}
 
-        if(valor.equalsIgnoreCase("true")) {
-            return true;
-        }
+		if (valor.equalsIgnoreCase("true")) {
+			return true;
+		}
 
-        if(valor.equalsIgnoreCase("false")) {
-            return false;
-        }
+		if (valor.equalsIgnoreCase("false")) {
+			return false;
+		}
 
-        return valor;
-    }
+		return valor;
+	}
 }
-
