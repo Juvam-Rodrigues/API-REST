@@ -54,7 +54,7 @@ Antes de executar o projeto, é necessário ter instalado:
 ### 1. Clonar o repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone "https://github.com/imetropoledigital/trabalho-ii-unidade-bianca-juvam-lucas.git"
 ```
 
 ### 2. Entrar na pasta do projeto
