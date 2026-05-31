@@ -473,3 +473,13 @@ A API possui tratamento global de exceções retornando respostas padronizadas.
 }
 ```
 
+```json
+{
+    "status": 404,
+    "message": "Documento não encontrado na collection produtos.",
+    "error": "Not Found",
+    "method": "PUT",
+    "path": "/produtos/6a1b7ced437a2795a89c9415"
+}
+```
+
