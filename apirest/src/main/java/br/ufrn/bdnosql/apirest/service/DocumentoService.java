@@ -8,7 +8,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+
 import br.ufrn.bdnosql.apirest.exception.custom.BadRequestException;
+import br.ufrn.bdnosql.apirest.exception.custom.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,13 +29,13 @@ public class DocumentoService {
 	public List<Object> criarDocumentos(String collection, List<Map<String, Object>> documentos) {
 		List<Object> documentosAdicionados = new ArrayList<>();
 		for (Map<String, Object> documento : documentos) {
-			documentosAdicionados.add(mongoTemplate.save(documento, collection));	
+			documentosAdicionados.add(mongoTemplate.save(documento, collection));
 		}
 		return documentosAdicionados;
 	}
 
 	public List<Document> listarDocumentos(String collection, Map<String, String> filtro, String atributosVisiveis,
-            String paginaAtual, String limite) {
+			String paginaAtual, String limite) {
 
 		Query query = new Query();
 
@@ -40,56 +44,76 @@ public class DocumentoService {
 		MetodosListar.adicionarLimite(limite, query);
 		MetodosListar.adicionarPagina(paginaAtual, query);
 
-		 List<Document> documentosListados = mongoTemplate.find(query, Document.class, collection);
-		 for (Document documentoAtual : documentosListados) {
+		List<Document> documentosListados = mongoTemplate.find(query, Document.class, collection);
+		for (Document documentoAtual : documentosListados) {
 
-		        ObjectId id = documentoAtual.getObjectId("_id");
+			ObjectId id = documentoAtual.getObjectId("_id");
 
-		        if (id != null) {
-		        	documentoAtual.put("_id", id.toHexString());
-		        }
-		    }
+			if (id != null) {
+				documentoAtual.put("_id", id.toHexString());
+			}
+		}
 
-		    return documentosListados;
+		return documentosListados;
 
 	}
 
 	public Object removerDocumento(String collection, String id) {
 
-		ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
+		try {
+			ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
+			Query query = Query.query(Criteria.where("_id").is(objectId));
+			DeleteResult resultado = mongoTemplate.remove(query, collection);
 
-		Query query = Query.query(Criteria.where("_id").is(objectId));
-		return mongoTemplate.remove(query, collection);
+			if (resultado.getDeletedCount() == 0) {
+				throw new NotFoundException("Documento não encontrado na collection " + collection + ".");
+			}
 
-	}
-	
-	public Object removerTodosDocumentosColecao(String collection) {
-		  Query query = new Query();
-		  return mongoTemplate.remove(query, collection);
-	}
-	
-	public Object atualizarDocumento(String collection, String id, Map<String, Object> documento) {
+			return resultado;
 
-		if (documento == null || documento.isEmpty()) {
-			throw new BadRequestException("Body está vazio");
+		} catch (IllegalArgumentException ex) {
+			throw new BadRequestException("O ID do documento é inválido.");
 		}
 
-		ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
-
-		Query query = Query.query(Criteria.where("_id").is(objectId));
-
-		Update update = new Update();
-
-		documento.forEach(update::set);
-
-		mongoTemplate.updateFirst(query, update, collection);
-
-        Map<String, String> filtro = new HashMap<>();
-        filtro.put("_id", id);
-        return listarDocumentos(collection, filtro, "", "", "");
 	}
 
-	public long contarDocumentos(String collection){
-		return(mongoTemplate.count(new Query(), collection));
+	public Object removerTodosDocumentosColecao(String collection) {
+		Query query = new Query();
+		return mongoTemplate.remove(query, collection);
+	}
+
+	public Object atualizarDocumento(String collection, String id, Map<String, Object> documento) {
+
+		try {
+			if (documento == null || documento.isEmpty()) {
+				throw new BadRequestException("Body está vazio");
+			}
+
+			ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
+
+			Query query = Query.query(Criteria.where("_id").is(objectId));
+
+			Update update = new Update();
+
+			documento.forEach(update::set);
+
+			UpdateResult resultado = mongoTemplate.updateFirst(query, update, collection);
+
+			if (resultado.getMatchedCount() == 0) {
+				throw new NotFoundException("Documento não encontrado na collection " + collection + ".");
+			}
+
+			Map<String, String> filtro = new HashMap<>();
+			filtro.put("_id", id);
+			return listarDocumentos(collection, filtro, "", "", "");
+			
+		} catch (IllegalArgumentException ex) {
+			throw new BadRequestException("O ID do documento é inválido.");
+
+		}
+	}
+
+	public long contarDocumentos(String collection) {
+		return (mongoTemplate.count(new Query(), collection));
 	}
 }
