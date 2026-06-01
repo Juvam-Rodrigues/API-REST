@@ -77,9 +77,9 @@ public class DocumentoController {
 	public ResponseEntity<Object> removerTodosDocumentosColecao(@PathVariable String collection) {
 		Object resposta = service.removerTodosDocumentosColecao(collection);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        return ResponseEntity.ok(
                 new CustomMessage(
-                        HttpStatus.NO_CONTENT.value(),
+                        HttpStatus.OK.value(),
                         "Documentos da coleção " + collection + " deletados com sucesso!",
                         resposta
                 )
@@ -89,9 +89,9 @@ public class DocumentoController {
 	@DeleteMapping("/{collection}/{id}")
 	public ResponseEntity<Object> remover(@PathVariable String collection, @PathVariable String id) {
 		Object resposta = service.removerDocumento(collection, id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        return ResponseEntity.ok(
                 new CustomMessage(
-                        HttpStatus.NO_CONTENT.value(),
+                        HttpStatus.OK.value(),
                         "Documento " + id + " da coleção " + collection + " deletado com sucesso!",
                         resposta
                 )
