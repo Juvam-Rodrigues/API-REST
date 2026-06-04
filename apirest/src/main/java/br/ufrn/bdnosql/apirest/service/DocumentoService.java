@@ -27,6 +27,7 @@ public class DocumentoService {
 	private final MongoTemplate mongoTemplate;
 
 	public List<Object> criarDocumentos(String collection, List<Map<String, Object>> documentos) {
+		
 		List<Object> documentosAdicionados = new ArrayList<>();
 		for (Map<String, Object> documento : documentos) {
 			documentosAdicionados.add(mongoTemplate.save(documento, collection));
@@ -86,7 +87,7 @@ public class DocumentoService {
 
 		try {
 			if (documento == null || documento.isEmpty()) {
-				throw new BadRequestException("Body está vazio");
+				throw new BadRequestException("Body está vazio.");
 			}
 
 			ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
@@ -117,7 +118,7 @@ public class DocumentoService {
 
 		try {
 			if (documento == null || documento.isEmpty()) {
-				throw new BadRequestException("Body está vazio");
+				throw new BadRequestException("Body está vazio.");
 			}
 
 			ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
