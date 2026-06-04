@@ -82,7 +82,7 @@ public class DocumentoService {
 		return mongoTemplate.remove(query, collection);
 	}
 
-	public Object atualizarDocumento(String collection, String id, Map<String, Object> documento) {
+	public Object atualizarCamposEspecificos(String collection, String id, Map<String, Object> documento) {
 
 		try {
 			if (documento == null || documento.isEmpty()) {
@@ -106,7 +106,36 @@ public class DocumentoService {
 			Map<String, String> filtro = new HashMap<>();
 			filtro.put("_id", id);
 			return listarDocumentos(collection, filtro, "", "", "");
-			
+
+		} catch (IllegalArgumentException ex) {
+			throw new BadRequestException("O ID do documento é inválido.");
+
+		}
+	}
+
+	public Object atualizarDocumentoInteiro(String collection, String id, Map<String, Object> documento) {
+
+		try {
+			if (documento == null || documento.isEmpty()) {
+				throw new BadRequestException("Body está vazio");
+			}
+
+			ObjectId objectId = new ObjectId(id); // Como o ID está armazenado no banco
+
+			Query query = Query.query(Criteria.where("_id").is(objectId));
+
+			boolean documentoExiste = mongoTemplate.exists(query, collection);
+
+			if (!documentoExiste) {
+				throw new NotFoundException("Documento não encontrado na collection " + collection + ".");
+			} else {
+				documento.put("_id", objectId);
+				mongoTemplate.save(documento, collection);
+				Map<String, String> filtro = new HashMap<>();
+				filtro.put("_id", id);
+				return listarDocumentos(collection, filtro, "", "", "");
+			}
+
 		} catch (IllegalArgumentException ex) {
 			throw new BadRequestException("O ID do documento é inválido.");
 

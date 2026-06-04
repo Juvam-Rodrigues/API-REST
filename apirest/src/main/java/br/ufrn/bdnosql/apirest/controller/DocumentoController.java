@@ -98,11 +98,25 @@ public class DocumentoController {
         );
 	}
 
-	@PutMapping("/{collection}/{id}")
-	public ResponseEntity<Object> atualizar(@PathVariable String collection, @PathVariable String id,
+	@PatchMapping("/{collection}/{id}")
+	public ResponseEntity<Object> atualizarCampos(@PathVariable String collection, @PathVariable String id,
 			@RequestBody Map<String, Object> documento) {
 
-		Object resposta = service.atualizarDocumento(collection, id, documento);
+		Object resposta = service.atualizarCamposEspecificos(collection, id, documento);
+        return ResponseEntity.ok(
+                new CustomMessage(
+                        HttpStatus.OK.value(),
+                        "Documento " + id + " da coleção " + collection + " atualizado com sucesso!",
+                        resposta
+                )
+        );
+	}
+	
+	@PutMapping("/{collection}/{id}")
+	public ResponseEntity<Object> atualizarDocumento(@PathVariable String collection, @PathVariable String id,
+			@RequestBody Map<String, Object> documento) {
+
+		Object resposta = service.atualizarDocumentoInteiro(collection, id, documento);
         return ResponseEntity.ok(
                 new CustomMessage(
                         HttpStatus.OK.value(),
