@@ -2,9 +2,9 @@
 
 ## Integrantes
 
-- Bianca Jennifer Franklin da Silva
-- Juvam Rodrigues do Nascimento Neto
-- Lucas Estanislau Gomes da Silva
+- Bianca Jennifer Franklin da Silva (<a>https://github.com/Bianca-Jennifer</a>)
+- Juvam Rodrigues do Nascimento Neto (<a>https://github.com/Juvam-Rodrigues</a>)
+- Lucas Estanislau Gomes da Silva (<a>https://github.com/lucas-estanislau</a>)
 
 ---
 
