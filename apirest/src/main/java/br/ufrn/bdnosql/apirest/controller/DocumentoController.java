@@ -3,13 +3,19 @@ package br.ufrn.bdnosql.apirest.controller;
 import java.util.List;
 import java.util.Map;
 
-import br.ufrn.bdnosql.apirest.message.CustomMessage;
-import org.bson.Document;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import br.ufrn.bdnosql.apirest.message.CustomMessage;
 import br.ufrn.bdnosql.apirest.service.DocumentoService;
 import lombok.AllArgsConstructor;
 
@@ -20,27 +26,14 @@ public class DocumentoController {
 
 	private final DocumentoService service;
 
-	@PostMapping("/{collection}")
-	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
-		List<Object> resposta = service.criarDocumentos(collection, documentos);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomMessage(
-                        HttpStatus.CREATED.value(),
-                        resposta.size() + " documento(s) criado(s) na coleção " + collection + ".",
-                        resposta
-                )
-        );
-	}
-	
-	@GetMapping("/")
+        @GetMapping("/")
 	public ResponseEntity<Object> inicioApi() {
 
         return ResponseEntity.ok(
                 new CustomMessage(
                         HttpStatus.OK.value(),
                         "API Rest Java + Sping Boot com MongoDB. " +
-                                "Crie uma coleção via POST com ou sem documentos: localhost:8080/<nome_da_colecao>. " +
+                                "Crie uma coleção via POST: localhost:8080/<nome_da_colecao>. " +
                                 "Consulte uma coleção via GET: localhost:8080/<nome_da_colecao>?<filtro>&fields=<>&page=<>&limit<>",
                         ""
                 )
@@ -68,6 +61,19 @@ public class DocumentoController {
                 new CustomMessage(
                         HttpStatus.OK.value(),
                         "Contagem realizada com sucesso",
+                        resposta
+                )
+        );
+	}
+        
+	@PostMapping("/{collection}")
+	public ResponseEntity<Object> criar(@PathVariable String collection, @RequestBody List<Map<String, Object>> documentos) {
+		List<Object> resposta = service.criarDocumentos(collection, documentos);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CustomMessage(
+                        HttpStatus.CREATED.value(),
+                        resposta.size() + " documento(s) criado(s) na coleção " + collection + ".",
                         resposta
                 )
         );
