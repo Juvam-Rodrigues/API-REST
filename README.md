@@ -121,10 +121,11 @@ GET /
 
 ```json
 {
-  "status": 200,
-  "message": "API Rest Java + Spring Boot com MongoDB",
-  "details": ""
-}
+  "status":200,
+  "message":"API Rest Java + Sping Boot com MongoDB.
+  Crie uma coleção via POST: localhost:8080/<nome_da_colecao>
+  Consulte uma coleção via GET: localhost:8080/<nome_da_colecao>?<filtro>&fields=<>&page=<>&limit<>",
+  "dado":""}
 ```
 
 ---
